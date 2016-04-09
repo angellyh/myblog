@@ -1,0 +1,10 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<strong></strong>
+<ul style="list-style:square">
+{% for category in categorys %}
+    <li>
+    <a href="/article-list/?category={{ category.id }}">{{category.name}}</a>
+    ({{category.article_num}})
+    </li>
+{% endfor %}
+</ul>

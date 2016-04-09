@@ -1,0 +1,47 @@
+1.关于datetimefield和EmailField的设置：
+( auto_now=True, editable=False
+auto_now_add=True, blank=True )
+
+exmple；
+updatetime = models.DateTimeField(auto_now=True, editable=False,null=True, verbose_name=u'更新时间')
+	email = models.EmailField(max_length=254, null= True,verbose_name = 'Email')
+
+2.comments库是django框架内置的评论库，可以快速搭建网站需要的评论系统。不过1.8的配置和1.6的出现了一点小小配置，由于刚刚接触，按照网上的文档配置，需要在
+
+settings.py的INSTALLED_APPS中加入‘django.contrib.comments’，但是按照这个配置完成之后会出现一下错误：
+
+ImportError: No module named comments
+
+ 开始一直以为是需要加载模块，但是添加模块之后依然有这个提示，后网上查阅发现原来1.8版本已经改了，参照http://django-contrib-comments.readthedocs.org/en/latest/porting.html
+
+#apt-get install pip
+#pip install django-contrib-comments
+在setting.py的INSTALLED_APPS中加入如下app
+INSTALLED_APPS = (
+    ...
+    'django_comments',
+    ...
+)
+
+ 这样然后python manger.py syncdb就可以了，不会报错。
+
+ 如果之后报错：Site matching query does not exist.
+
+需要在setting.py中添加SITE_ID = 1就可以了
+导入comment模块命令
+
+ from django_comments.models import Comment
+
+ INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django_comments',
+    'blog',
+]
+SITE_ID=1
+

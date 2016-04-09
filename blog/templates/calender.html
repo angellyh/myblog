@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8">
+<style type="text/css"> 
+.Calendar { 
+font-family:Verdana; 
+font-size:9pt; 
+background-color:#FCC;
+text-align:center; 
+width:198px; 
+height:158px; 
+padding:10px; 
+line-height:1.5em; 
+} 
+.Calendar a{ 
+color:#0066CC; 
+} 
+.Calendar table{ 
+width:100%; 
+border:0; 
+} 
+.Calendar table thead{color:#acacac;} 
+.Calendar table td { 
+font-size: 11px; 
+padding:1px; 
+} 
+#idCalendarPre{ 
+cursor:pointer; 
+float:left; 
+padding-right:5px; 
+} 
+#idCalendarNext{ 
+cursor:pointer; 
+float:right; 
+padding-right:5px; 
+} 
+#idCalendar td.onToday { 
+font-weight:bold; 
+color:#C60; 
+} 
+#idCalendar td.onSelect { 
+font-weight:bold; 
+} 
+</style> 
+<script type="text/javascript"> 
+var $ = function (id) { 
+return "string" == typeof id ? document.getElementById(id) : id; 
+}; 
+var Class = { 
+create: function() { 
+return function() { 
+this.initialize.apply(this, arguments); 
+} 
+} 
+} 
+Object.extend = function(destination, source) { 
+for (var property in source) { 
+destination[property] = source[property]; 
+} 
+return destination; 
+} 
+var Calendar = Class.create(); 
+Calendar.prototype = { 
+initialize: function(container, options) { 
+this.Container = $(container);//table½á¹¹ÈÝÆ÷
+this.Days = [];//ÈÕÆÚÁÐ±í 
+this.SetOptions(options); 
+this.Year = this.options.Year; 
+this.Month = this.options.Month; 
+this.SelectDay = this.options.SelectDay ? new Date(this.options.SelectDay) : null; 
+this.onSelectDay = this.options.onSelectDay; 
+this.onToday = this.options.onToday; 
+this.onFinish = this.options.onFinish; 
+this.Draw(); 
+}, 
+ 
+SetOptions: function(options) { 
+this.options = {//Ä¬ÈÏÖµ 
+Year: new Date().getFullYear(), 
+Month: new Date().getMonth() + 1, 
+SelectDay: null,//Ñ¡ÔñÈÕÆÚ 
+onSelectDay: function(){}, 
+onToday: function(){}, 
+onFinish: function(){} 
+}; 
+Object.extend(this.options, options || {}); 
+}, 
+//ÉÏÔÂ 
+PreMonth: function() { 
+//È¡µÃÉÏÔÂÈÕÆÚ¶ÔÏó 
+var d = new Date(this.Year, this.Month - 2, 1); 
+//ÉèÖÃÊôÐÔ 
+this.Year = d.getFullYear(); 
+this.Month = d.getMonth() + 1; 
+//ÖØ»æÈÕÀú 
+this.Draw(); 
+}, 
+//ÏÂÒ»¸öÔÂ 
+NextMonth: function() { 
+var d = new Date(this.Year, this.Month, 1); 
+this.Year = d.getFullYear(); 
+this.Month = d.getMonth() + 1; 
+this.Draw(); 
+}, 
+
+Draw: function() { 
+//±£´æÈÕÆÚÁÐ±í 
+var arr = []; 
+//ÓÃµ±ÔÂµÚÒ»ÌìÔÚÒ»ÖÜÖÐµÄÈÕÆÚÖµ×÷Îªµ±ÔÂÀëµÚÒ»ÌìµÄÌìÊý 
+for(var i = 1, firstDay = new Date(this.Year, this.Month - 1, 1).getDay(); i <= firstDay; i++){ arr.push(" "); } 
+//ÓÃµ±ÔÂ×îºóÒ»ÌìÔÚÒ»¸öÔÂÖÐµÄÈÕÆÚÖµ×÷Îªµ±ÔÂµÄÌìÊý 
+for(var i = 1, monthDay = new Date(this.Year, this.Month, 0).getDate(); i <= monthDay; i++){ arr.push(i); } 
+// /
+var frag = document.createDocumentFragment(); 
+this.Days = []; 
+while(arr.length > 0){ 
+//Ã¿¸öÐÇÆÚ²åÈëÒ»¸ötr
+var row = document.createElement("tr"); 
+//ÐÇÆÚ 
+for(var i = 1; i <= 7; i++){ 
+var cell = document.createElement("td"); 
+cell.innerHTML = " "; 
+if(arr.length > 0){ 
+var d = arr.shift(); 
+cell.innerHTML = d; 
+if(d > 0){ 
+this.Days[d] = cell; 
+//»ñÈ¡½ñÈÕ 
+if(this.IsSame(new Date(this.Year, this.Month - 1, d), new Date())){ this.onToday(cell); } 
+//ÅÐ¶ÏÓÃ»§ÊÇ·ñ×÷ÁËÑ¡Ôñ
+if(this.SelectDay && this.IsSame(new Date(this.Year, this.Month - 1, d), this.SelectDay)){ this.onSelectDay(cell); } 
+} 
+} 
+row.appendChild(cell); 
+} 
+frag.appendChild(row); 
+} 
+//´ËÏÈÇå¿ÕÈ»ºóÔÙ²åÈë(ieµÄtable²»ÄÜÓÃinnerHTML) 
+while(this.Container.hasChildNodes()){ this.Container.removeChild(this.Container.firstChild); } 
+this.Container.appendChild(frag); 
+this.onFinish(); 
+}, 
+//ÅÐ¶ÏÊÇ·ñÍ¬Ò»ÈÕ
+IsSame: function(d1, d2) { 
+return (d1.getFullYear() == d2.getFullYear() && d1.getMonth() == d2.getMonth() && d1.getDate() == d2.getDate()); 
+} 
+}; 
+</script>
+</head>
+<body>  
+<div class="Calendar"> 
+<div id="idCalendarPre"><<</div> 
+<div id="idCalendarNext">>></div> 
+<span id="idCalendarYear">2016</span>年<span id="idCalendarMonth">4</span>月
+<table cellspacing="0"> 
+<thead> 
+<tr> 
+<td>日</td> 
+<td>一</td> 
+<td>二</td> 
+<td>三</td> 
+<td>四</td> 
+<td>五</td> 
+<td>六</td> 
+</tr> 
+</thead> 
+<tbody id="idCalendar"> 
+</tbody> 
+</table> 
+</div> 
+<script language="JavaScript"> 
+var cale = new Calendar("idCalendar", { 
+SelectDay: new Date().setDate(10), 
+onSelectDay: function(o){ o.className = "onSelect"; }, 
+onToday: function(o){ o.className = "onToday"; }, 
+onFinish: function(){ 
+$("idCalendarYear").innerHTML = this.Year; $("idCalendarMonth").innerHTML = this.Month; 
+var flag = []; 
+for(var i = 0, len = flag.length; i < len; i++){ 
+this.Days[flag[i]].innerHTML = "<a href='javascript:void(0);' onclick=\"alert('ÄúÑ¡ÔñµÄÈÕÆÚÊÇ£º"+this.Year+"/"+this.Month+"/"+flag[i]+"');return false;\">" + flag[i] + "</a>"; 
+} 
+} 
+}); 
+$("idCalendarPre").onclick = function(){ cale.PreMonth(); } 
+$("idCalendarNext").onclick = function(){ cale.NextMonth(); } 
+</script>
+</body>
+</html>
+

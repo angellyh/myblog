@@ -1,0 +1,27 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style type="text/css">
+.shijian {
+	font-size: 18px;
+}
+</style>
+
+{% extends 'base.html' %}
+{% load custom_markdown %}
+{% block main %}
+  <div class="article">
+    <h1>{{article.caption}}</h1>
+    <span><img src="file:///D|/myweb/mysite/static/images/category.png" width="24" height="24" />&nbsp;&nbsp;<a href="/article-list/?category={{ category.id }}" class="shijian">{{article.category.name}}</a></span>&nbsp;&nbsp;&nbsp;
+    <span><img src="file:///D|/myweb/mysite/static/images/calendar.png" width="25" height="29" /> <span class="shijian">&nbsp;{{article.createtime|date:"Y-m-d H:i:s"}}</span><span>
+    <p>{{article.content|safe|custom_markdown}}</p>
+  </div>
+<script src="../static/highlight/src/highlight.js"></script>
+<link href="../static/highlight/src/styles/monokai.css" rel="stylesheet" type="text/css"/>
+  <div class="hits">  
+    <form id="goodorbad" action="" method="post">{% csrf_token %}
+      <input id="good" name='good' type="submit" value="顶 ({{article.goods}})">
+      <input id="bad" name='bad' type="submit" value="踩 ({{article.bads}})">
+    </form>
+    <span>您是本文的第<strong>{{article.hits}}</strong>个读者</span>
+  </div>
+  {% include "duoshuo.html" %}
+{% endblock %}

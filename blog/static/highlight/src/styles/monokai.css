@@ -1,0 +1,70 @@
+/*
+Monokai style - ported by Luigi Maselli - http://grigio.org
+*/
+
+.codehilite {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  background: #272822; color: #ddd;
+}
+
+.codehilite-tag,
+.codehilite-keyword,
+.codehilite-selector-tag,
+.codehilite-literal,
+.codehilite-strong,
+.codehilite-name {
+  color: #f92672;
+}
+
+.codehilite-code {
+  color: #66d9ef;
+}
+
+.codehilite-class .codehilite-title {
+  color: white;
+}
+
+.codehilite-attribute,
+.codehilite-symbol,
+.codehilite-regexp,
+.codehilite-link {
+  color: #bf79db;
+}
+
+.codehilite-string,
+.codehilite-bullet,
+.codehilite-subst,
+.codehilite-title,
+.codehilite-section,
+.codehilite-emphasis,
+.codehilite-type,
+.codehilite-built_in,
+.codehilite-builtin-name,
+.codehilite-selector-attr,
+.codehilite-selector-pseudo,
+.codehilite-addition,
+.codehilite-variable,
+.codehilite-template-tag,
+.codehilite-template-variable {
+  color: #a6e22e;
+}
+
+.codehilite-comment,
+.codehilite-quote,
+.codehilite-deletion,
+.codehilite-meta {
+  color: #75715e;
+}
+
+.codehilite-keyword,
+.codehilite-selector-tag,
+.codehilite-literal,
+.codehilite-doctag,
+.codehilite-title,
+.codehilite-section,
+.codehilite-type,
+.codehilite-selector-id {
+  font-weight: bold;
+}

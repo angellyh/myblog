@@ -1,0 +1,45 @@
+<style type="text/css">
+.fenlei {
+	color: #F00;
+	font-weight: bold;
+	font-size: 24px;
+}
+#biaoti {
+	font-size: 36px;
+}
+</style>
+{% extends 'base.html' %}
+
+{% block main %}
+
+{% if articles %}
+{% for article in articles %}
+<div>
+  <div class="articleshort">
+    <div class="fenlei">
+    <h6>
+     <label>{{article.category.name}}</label>
+    </h6>
+    </div>
+        <a href="/article/?article={{article.id}}" id="biaoti"><strong>{{article.caption}}</strong></a> <br>
+    <div>时间：{{article.createtime|date:"Y-m-d H:i:s"}}</div>
+    <div>{{ article.shortcontent|truncatechars:200}} </div>
+<h5><a href="/article/?article={{article.id}}"> 阅读全文 &gt;&gt;</a></h5>
+    <div class="info">
+      <span>阅读({{article.hits}})</span>
+      <span class="ds-thread-count" data-thread-key="{{article.id}}"></span>
+      <span>顶({{article.goods}})</span>
+      <span>踩({{article.bads}})</span>
+      <hr />
+    </div>
+  </div>
+  </div>
+  {% endfor %}
+
+{% else %}
+  <div class="no-article">
+    <p>这人很懒，还没文章</p>
+  </div>
+{% endif %}
+
+{% endblock %}
